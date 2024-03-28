@@ -1,0 +1,30 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Local environments and the Python venv that is not part of this project
+project_venv/
+.venv/
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Caches and scratch
+.cache/
+.eslintcache
+.vite/
+tmp/
+
+.DS_Store
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+docs/screenshots/*.tmp.png
+
+.github/

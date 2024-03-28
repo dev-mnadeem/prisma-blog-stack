@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  name     String
+  /// bcrypt hash — never the plaintext, and never selected into an API response.
+  password String
+  posts    Post[]
+}
+
+model Post {
+  id      String @id @default(uuid())
+  title   String
+  content String
+  /// Standfirst shown in the list view. Written by the configured summary
+  /// provider when the post is saved, so listing never has to read `content`.
+  excerpt String @default("")
+  /// Derived from the word count at write time for the "N min read" label.
+  readingMinutes Int      @default(1)
+  author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  /// The list view is always ordered by createdAt desc, optionally narrowed to
+  /// one author. Without these two, both paths are a sequential scan and sort.
+  @@index([createdAt(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc)])
+}

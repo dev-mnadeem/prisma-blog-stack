@@ -1,0 +1,24 @@
+{
+  "name": "blogs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A two-package blog: an Express + Prisma API and a React reading client.",
+  "license": "MIT",
+  "workspaces": ["server", "web"],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev -w @blogs/server\" \"npm run start -w @blogs/web\"",
+    "build": "npm run build -w @blogs/server && npm run build -w @blogs/web",
+    "db:migrate": "npm run prisma:migrate -w @blogs/server",
+    "db:seed": "npm run seed -w @blogs/server",
+    "setup": "npm run prisma:generate -w @blogs/server && npm run db:migrate && npm run db:seed",
+    "lint": "npm run lint -w @blogs/server && npm run lint -w @blogs/web",
+    "typecheck": "npm run typecheck -w @blogs/server && npm run typecheck -w @blogs/web",
+    "test": "npm run test -w @blogs/server && npm run test -w @blogs/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
