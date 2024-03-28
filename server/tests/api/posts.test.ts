@@ -145,4 +145,13 @@ describe('posts', () => {
 
     await request(app).get(`/api/posts/${created.body.payload.id}`).expect(404);
   });
+
+  it('answers the second of two simultaneous deletes with 404', async () => {
+    const created = await createPost(author.token, 'Deleted twice', BODY).expect(201);
+    const remove = () => request(app).delete(`/api/posts/${created.body.payload.id}`).set('authtoken', author.token);
+
+    const responses = await Promise.all([remove(), remove()]);
+
+    expect(responses.map((response) => response.status).sort()).to.deep.equal([204, 404]);
+  });
 });

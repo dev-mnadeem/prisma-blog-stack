@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '../db/prisma';
+import { isPrismaError, prisma } from '../db/prisma';
 
 /**
  * Every read pulls the author in the same round trip. Fetching posts and then
@@ -66,11 +66,21 @@ export const postRepository = {
     return prisma.post.create({ data, include: withAuthor });
   },
 
-  update(id: string, data: Prisma.PostUpdateInput): Promise<PostWithAuthor> {
-    return prisma.post.update({ where: { id }, data, include: withAuthor });
+  /** Null when the post was deleted after the caller's ownership check. */
+  async update(id: string, data: Prisma.PostUpdateInput): Promise<PostWithAuthor | null> {
+    try {
+      return await prisma.post.update({ where: { id }, data, include: withAuthor });
+    } catch (error) {
+      if (isPrismaError(error, 'P2025')) {
+        return null;
+      }
+      throw error;
+    }
   },
 
-  async delete(id: string): Promise<void> {
-    await prisma.post.delete({ where: { id } });
+  /** False when there was nothing left to delete. */
+  async delete(id: string): Promise<boolean> {
+    const { count } = await prisma.post.deleteMany({ where: { id } });
+    return count > 0;
   },
 };

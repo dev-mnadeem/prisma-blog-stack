@@ -115,12 +115,17 @@ export function createPostService(summaryProvider: SummaryProvider = createSumma
         content: input.content,
         ...derived,
       });
+      if (!post) {
+        throw new NotFoundError('Post not found');
+      }
       return toView(post);
     },
 
     async remove(id: string, userId: string): Promise<void> {
       await loadOwned(id, userId);
-      await postRepository.delete(id);
+      if (!(await postRepository.delete(id))) {
+        throw new NotFoundError('Post not found');
+      }
     },
   };
 }
