@@ -12,7 +12,12 @@ export function Header(): JSX.Element {
     <AppBar
       position="static"
       color="transparent"
-      sx={{ borderBottom: `1px solid ${ink.rule}`, backgroundColor: ink.surface }}
+      elevation={0}
+      sx={{
+        borderTop: `4px solid ${ink.accent}`,
+        borderBottom: `1px solid ${ink.rule}`,
+        backgroundColor: ink.surface,
+      }}
     >
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ gap: 2, minHeight: 68 }}>
@@ -20,7 +25,7 @@ export function Header(): JSX.Element {
             component={RouterLink}
             to={routes.home}
             variant="h3"
-            sx={{ textDecoration: 'none', color: ink.primary, fontSize: '1.25rem', letterSpacing: '-0.01em' }}
+            sx={{ textDecoration: 'none', color: ink.primary, fontSize: '1.5rem', letterSpacing: '-0.02em' }}
           >
             Blogs
           </Typography>

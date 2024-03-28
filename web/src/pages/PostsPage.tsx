@@ -140,8 +140,8 @@ export function PostsPage(): JSX.Element {
             ) : null}
           </Typography>
           <Box component="section" aria-label="Posts">
-            {result.items.map((post) => (
-              <PostCard key={post.id} post={post} />
+            {result.items.map((post, index) => (
+              <PostCard key={post.id} post={post} lead={index === 0 && page === 1 && !search && !author} />
             ))}
           </Box>
           {result.totalPages > 1 ? (
