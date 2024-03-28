@@ -4,6 +4,9 @@
   "private": true,
   "description": "React reading client for the blogs API.",
   "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "start": "vite --port 7232 --strictPort",
     "dev": "npm run start",
