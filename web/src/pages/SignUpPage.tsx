@@ -1,6 +1,6 @@
 import { Box, Link, Paper, Stack, Typography } from '@mui/material';
-import { useCallback } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { type JSX, useCallback } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import { register } from '../api/auth';
 import { useAuth } from '../auth/AuthContext';
 import { CredentialsForm, CredentialsFormValues } from '../components/CredentialsForm';

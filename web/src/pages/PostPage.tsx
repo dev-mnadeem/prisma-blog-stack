@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Skeleton, Stack, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { type JSX, useCallback, useEffect, useState } from 'react';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router';
 import { apiErrorMessage } from '../api/client';
 import { deletePost, fetchPost } from '../api/posts';
 import { useAuth } from '../auth/AuthContext';
@@ -93,7 +93,7 @@ export function PostPage(): JSX.Element {
         <Divider sx={{ mb: 4 }} />
 
         {post.content.split(/\n{2,}/).map((paragraph, index) => (
-          <Typography key={index} variant="body1" paragraph>
+          <Typography key={index} variant="body1" component="p" sx={{ mb: 2 }}>
             {paragraph}
           </Typography>
         ))}

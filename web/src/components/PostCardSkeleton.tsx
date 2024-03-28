@@ -1,5 +1,6 @@
 import { Box, Skeleton } from '@mui/material';
 import { ink } from '../styles/theme';
+import type { JSX } from 'react';
 
 export function PostCardSkeleton(): JSX.Element {
   return (

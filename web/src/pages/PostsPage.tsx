@@ -1,6 +1,6 @@
 import { Box, Pagination, Stack, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { type JSX, useCallback, useEffect, useState } from 'react';
+import { Link as RouterLink, useSearchParams } from 'react-router';
 import { fetchPosts } from '../api/posts';
 import { apiErrorMessage } from '../api/client';
 import { Layout } from '../components/Layout';
@@ -105,7 +105,7 @@ export function PostsPage(): JSX.Element {
             ))}
           </Box>
           {result.totalPages > 1 ? (
-            <Stack alignItems="center" sx={{ mt: 4 }}>
+            <Stack sx={{ alignItems: 'center', mt: 4 }}>
               <Pagination count={result.totalPages} page={result.page} onChange={onPageChange} />
             </Stack>
           ) : null}

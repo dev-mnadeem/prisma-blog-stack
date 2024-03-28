@@ -1,6 +1,6 @@
 import { Alert, Box, Button, Stack, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { type JSX, useState } from 'react';
 import * as Yup from 'yup';
 import { apiErrorMessage } from '../api/client';
 import { PostDraft } from '../types/post';

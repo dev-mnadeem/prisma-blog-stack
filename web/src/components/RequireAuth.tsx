@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from '@mui/material';
-import { PropsWithChildren } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { type JSX, PropsWithChildren } from 'react';
+import { Navigate, useLocation } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { routes } from './routes';
 

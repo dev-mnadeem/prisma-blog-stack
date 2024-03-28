@@ -1,6 +1,6 @@
 import { Box, Skeleton, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { type JSX, useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { apiErrorMessage } from '../api/client';
 import { createPost, fetchPost, updatePost } from '../api/posts';
 import { Layout } from '../components/Layout';

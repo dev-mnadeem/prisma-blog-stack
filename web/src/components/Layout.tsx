@@ -1,5 +1,5 @@
 import { Box, Container } from '@mui/material';
-import { PropsWithChildren } from 'react';
+import { type JSX, PropsWithChildren } from 'react';
 import { Header } from './Header';
 
 interface LayoutProps {

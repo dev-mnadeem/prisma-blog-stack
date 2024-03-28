@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { render, RenderResult } from '@testing-library/react';
 import { ReactElement } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { AuthProvider } from '../auth/AuthContext';
 import { theme } from '../styles/theme';
 
@@ -16,10 +16,7 @@ export function renderWithProviders(
 ): RenderResult {
   return render(
     <ThemeProvider theme={theme}>
-      <MemoryRouter
-        initialEntries={[route]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={[route]}>
         <AuthProvider>
           <Routes>
             <Route path={path} element={ui} />

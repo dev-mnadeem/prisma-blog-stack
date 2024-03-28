@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import {
   createContext,
+  type JSX,
   PropsWithChildren,
   useCallback,
   useContext,

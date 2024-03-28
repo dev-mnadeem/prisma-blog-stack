@@ -1,8 +1,9 @@
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { ink } from '../styles/theme';
 import { routes } from './routes';
+import type { JSX } from 'react';
 
 export function Header(): JSX.Element {
   const { account, signOut } = useAuth();

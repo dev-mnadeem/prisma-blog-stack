@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { ink } from '../styles/theme';
 import { Post } from '../types/post';
 import { formatDate, formatReadingTime } from './formatting';
 import { routes } from './routes';
+import type { JSX } from 'react';
 
 export function PostCard({ post }: { post: Post }): JSX.Element {
   return (

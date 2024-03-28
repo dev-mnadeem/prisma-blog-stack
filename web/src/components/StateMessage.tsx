@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { ReactNode } from 'react';
+import { type JSX, ReactNode } from 'react';
 import { ink } from '../styles/theme';
 
 interface StateMessageProps {

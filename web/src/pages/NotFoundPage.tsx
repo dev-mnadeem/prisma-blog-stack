@@ -1,8 +1,9 @@
 import { Button } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Layout } from '../components/Layout';
 import { routes } from '../components/routes';
 import { StateMessage } from '../components/StateMessage';
+import type { JSX } from 'react';
 
 export function NotFoundPage(): JSX.Element {
   return (

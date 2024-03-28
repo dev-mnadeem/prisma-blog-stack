@@ -1,6 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { InputAdornment, TextField } from '@mui/material';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, type JSX, useEffect, useState } from 'react';
 
 interface SearchFieldProps {
   value: string;
@@ -27,12 +27,14 @@ export function SearchField({ value, onSearch }: SearchFieldProps): JSX.Element 
         onChange={(event) => setDraft(event.target.value)}
         placeholder="Search posts"
         label="Search posts"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          },
         }}
       />
     </form>
