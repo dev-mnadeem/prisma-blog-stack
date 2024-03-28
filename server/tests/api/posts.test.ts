@@ -56,6 +56,11 @@ describe('posts', () => {
     expect(response.body.payload.pageSize).to.equal(50);
   });
 
+  it('rejects a page number too large to turn into an offset', async () => {
+    const response = await request(app).get('/api/posts?page=1e20').expect(400);
+    expect(response.body.message).to.contain('page');
+  });
+
   it('searches titles and bodies case-insensitively', async () => {
     const marker = `Zebra${Date.now()}`;
     await createPost(author.token, `A post about ${marker}`, BODY).expect(201);

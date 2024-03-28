@@ -4,6 +4,8 @@ const MIN_NAME = 3;
 const MIN_PASSWORD = 8;
 const MIN_TITLE = 3;
 const MIN_CONTENT = 10;
+/** Keeps the OFFSET inside Postgres' integer range; ?page=1e20 used to be a 500. */
+const MAX_PAGE = 1_000_000;
 
 export const registrationSchema = object({
   name: string().trim().required('Name is required').min(MIN_NAME),
@@ -24,7 +26,7 @@ export const writePostSchema = object({
 export const listPostsSchema = object({
   search: string().trim().optional(),
   author: string().trim().optional(),
-  page: number().integer().min(1).optional(),
+  page: number().integer().min(1).max(MAX_PAGE).optional(),
   pageSize: number().integer().min(1).optional(),
 });
 
