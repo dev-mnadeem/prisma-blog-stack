@@ -37,7 +37,8 @@ describe('<PostPage />', () => {
     renderWithProviders(<PostPage />, { route: `/posts/${post.id}`, path: '/posts/:id' });
 
     expect(await screen.findByRole('heading', { level: 1, name: post.title })).toBeInTheDocument();
-    expect(screen.getByText(/John Doe · 1 April 2024 · 3 min read/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'John Doe' })).toHaveAttribute('href', '/?author=author-1');
+    expect(screen.getByText('1 April 2024')).toBeInTheDocument();
     for (const paragraph of post.content.split('\n\n')) {
       expect(screen.getByText(paragraph)).toBeInTheDocument();
     }

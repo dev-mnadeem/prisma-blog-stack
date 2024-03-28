@@ -1,17 +1,15 @@
 import { Box, Typography } from '@mui/material';
+import type { JSX } from 'react';
 import { Link as RouterLink } from 'react-router';
 import { ink } from '../styles/theme';
 import { Post } from '../types/post';
-import { formatDate, formatReadingTime } from './formatting';
+import { Byline } from './Byline';
 import { routes } from './routes';
-import type { JSX } from 'react';
 
 export function PostCard({ post }: { post: Post }): JSX.Element {
   return (
     <Box component="article" sx={{ py: 4, borderBottom: `1px solid ${ink.rule}` }}>
-      <Typography variant="overline" sx={{ color: ink.secondary }}>
-        {post.author.name} · {formatDate(post.createdAt)} · {formatReadingTime(post.readingMinutes)}
-      </Typography>
+      <Byline post={post} />
       <Typography variant="h2" sx={{ mt: 1, mb: 1.5 }}>
         <Box
           component={RouterLink}

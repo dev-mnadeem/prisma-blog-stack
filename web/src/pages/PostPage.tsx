@@ -17,11 +17,11 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router';
 import { apiErrorMessage } from '../api/client';
 import { deletePost, fetchPost } from '../api/posts';
 import { useAuth } from '../auth/AuthContext';
-import { formatDate, formatReadingTime } from '../components/formatting';
+import { Byline } from '../components/Byline';
 import { Layout } from '../components/Layout';
 import { routes } from '../components/routes';
 import { ErrorState } from '../components/StateMessage';
-import { ink, READING_MEASURE } from '../styles/theme';
+import { READING_MEASURE } from '../styles/theme';
 import { Post } from '../types/post';
 
 export function PostPage(): JSX.Element {
@@ -111,9 +111,7 @@ export function PostPage(): JSX.Element {
   return (
     <Layout maxWidth="md">
       <Box component="article" sx={{ maxWidth: READING_MEASURE, mx: 'auto' }}>
-        <Typography variant="overline" sx={{ color: ink.secondary }}>
-          {post.author.name} · {formatDate(post.createdAt)} · {formatReadingTime(post.readingMinutes)}
-        </Typography>
+        <Byline post={post} />
         <Typography variant="h1" sx={{ mt: 1.5, mb: 3 }}>
           {post.title}
         </Typography>

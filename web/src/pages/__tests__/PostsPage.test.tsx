@@ -29,7 +29,8 @@ describe('<PostsPage />', () => {
 
     expect(await screen.findByText(samplePosts[0].title)).toBeInTheDocument();
     expect(screen.getByText(samplePosts[1].title)).toBeInTheDocument();
-    expect(screen.getByText(/John Doe · 1 April 2024 · 3 min read/)).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'John Doe' })[0]).toHaveAttribute('href', '/?author=author-1');
+    expect(screen.getByText('1 April 2024')).toHaveAttribute('datetime', samplePosts[0].createdAt);
     expect(screen.getByText(samplePosts[0].excerpt)).toBeInTheDocument();
   });
 
@@ -83,5 +84,50 @@ describe('<PostsPage />', () => {
     await screen.findByText(samplePosts[0].title);
     expect(screen.getByRole('navigation')).toBeInTheDocument();
     expect(screen.getByText('14 posts')).toBeInTheDocument();
+  });
+
+  it('narrows the feed to one author from the URL', async () => {
+    mockedFetchPosts.mockResolvedValue(samplePage([samplePosts[0]]));
+    renderWithProviders(<PostsPage />, { route: '/?author=author-1' });
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Posts by John Doe' })).toBeInTheDocument();
+    expect(mockedFetchPosts).toHaveBeenCalledWith({ author: 'author-1', page: 1, pageSize: 6 });
+    expect(screen.getByRole('link', { name: 'Show posts by everyone' })).toHaveAttribute('href', '/');
+  });
+
+  it('keeps the author filter when searching within it', async () => {
+    mockedFetchPosts.mockResolvedValue(samplePage([samplePosts[0]]));
+    renderWithProviders(<PostsPage />, { route: '/?author=author-1' });
+    await screen.findByText(samplePosts[0].title);
+
+    await userEvent.type(screen.getByLabelText('Search posts'), 'join{enter}');
+
+    await waitFor(() =>
+      expect(mockedFetchPosts).toHaveBeenLastCalledWith({
+        search: 'join',
+        author: 'author-1',
+        page: 1,
+        pageSize: 6,
+      })
+    );
+  });
+
+  it('says so when the page number is past the end', async () => {
+    mockedFetchPosts.mockResolvedValue(samplePage([], { total: 9, totalPages: 2, page: 7 }));
+    renderWithProviders(<PostsPage />, { route: '/?page=7' });
+
+    expect(await screen.findByText('There is no page 7')).toBeInTheDocument();
+    expect(screen.queryByText('No posts yet')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Go to the first page' })).toHaveAttribute('href', '/');
+  });
+
+  it('clears a search from the result count', async () => {
+    mockedFetchPosts.mockResolvedValue(samplePage());
+    renderWithProviders(<PostsPage />, { route: '/?search=loop' });
+    await screen.findByText(samplePosts[0].title);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+
+    await waitFor(() => expect(mockedFetchPosts).toHaveBeenLastCalledWith({ page: 1, pageSize: 6 }));
   });
 });
