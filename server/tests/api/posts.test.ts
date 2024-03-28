@@ -19,7 +19,7 @@ describe('posts', () => {
     const response = await createPost(author.token, 'Excerpts are derived', BODY).expect(201);
     const post = response.body.payload;
 
-    expect(post.excerpt).to.be.a('string').and.not.empty;
+    expect(post.excerpt).to.be.a('string').with.length.greaterThan(0);
     expect(post.excerpt.length).to.be.at.most(180);
     expect(post.readingMinutes).to.be.at.least(1);
     expect(post.author.name).to.equal('Post Author');
