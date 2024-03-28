@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
+import { prisma } from '../../src/db/prisma';
 import { app, createAccount, createPost, TestAccount } from './helpers';
 
 const BODY = [
@@ -49,6 +50,31 @@ describe('posts', () => {
     for (const item of items) {
       expect(item.author.name).to.be.a('string');
     }
+  });
+
+  it('orders posts that share a timestamp by id, so pages never overlap', async () => {
+    const writer = await createAccount('Same Instant');
+    const me = await request(app).get('/api/auth/me').set('authtoken', writer.token).expect(200);
+    const createdAt = new Date('2024-01-01T00:00:00.000Z');
+    await prisma.post.createMany({
+      data: Array.from({ length: 5 }, (_, index) => ({
+        title: `Tied post ${index}`,
+        content: BODY,
+        authorId: me.body.payload.id,
+        createdAt,
+      })),
+    });
+
+    const seen: string[] = [];
+    for (let page = 1; page <= 5; page += 1) {
+      const response = await request(app)
+        .get(`/api/posts?author=${me.body.payload.id}&pageSize=1&page=${page}`)
+        .expect(200);
+      seen.push(response.body.payload.items[0].id);
+    }
+
+    expect(seen).to.deep.equal([...seen].sort().reverse());
+    expect(new Set(seen).size).to.equal(5);
   });
 
   it('clamps an oversized page size instead of returning everything', async () => {

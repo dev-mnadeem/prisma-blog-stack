@@ -49,7 +49,8 @@ export const postRepository = {
       prisma.post.findMany({
         where,
         include: withAuthor,
-        orderBy: { createdAt: 'desc' },
+        // id breaks createdAt ties; without it Postgres may return tied rows in any order per page.
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         skip: query.skip,
         take: query.take,
       }),
