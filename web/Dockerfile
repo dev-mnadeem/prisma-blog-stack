@@ -13,7 +13,7 @@ COPY web/ web/
 RUN npm run build --workspace @blogs/web
 
 # ---- runtime: static files behind nginx, unprivileged image, port 8080 ----
-FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
+FROM nginxinc/nginx-unprivileged:1.29-alpine AS runtime
 COPY --from=build /repo/web/dist /usr/share/nginx/html
 COPY web/nginx.conf /etc/nginx/conf.d/default.conf
 USER 101
