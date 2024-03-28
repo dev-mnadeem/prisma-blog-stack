@@ -24,6 +24,16 @@ describe('authentication', () => {
     expect(response.body.message).to.equal('User already exists');
   });
 
+  it('answers simultaneous sign-ups for one email with one 201 and 409s', async () => {
+    const email = `race-${Date.now()}@example.com`;
+    const attempt = () =>
+      request(app).post('/api/auth/signup').send({ name: 'Racer', email, password: 'long enough password' });
+
+    const responses = await Promise.all([attempt(), attempt(), attempt()]);
+
+    expect(responses.map((response) => response.status).sort()).to.deep.equal([201, 409, 409]);
+  });
+
   it('rejects a short password with a field message', async () => {
     const response = await request(app)
       .post('/api/auth/signup')

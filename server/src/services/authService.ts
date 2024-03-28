@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
+import { isPrismaError } from '../db/prisma';
 import { ConflictError, UnauthorizedError } from '../http/errors';
 import { userRepository } from '../repositories/userRepository';
 import { AuthenticatedUser } from '../types/request';
@@ -50,8 +51,16 @@ export const authService = {
     if (existing) {
       throw new ConflictError('User already exists');
     }
-    const user = await userRepository.create({ name, email, password: hashPassword(password) });
-    return { id: user.id, name: user.name, email: user.email };
+    try {
+      const user = await userRepository.create({ name, email, password: hashPassword(password) });
+      return { id: user.id, name: user.name, email: user.email };
+    } catch (error) {
+      // Two sign-ups for one email can both pass the lookup above; the unique index decides.
+      if (isPrismaError(error, 'P2002')) {
+        throw new ConflictError('User already exists');
+      }
+      throw error;
+    }
   },
 
   /**
