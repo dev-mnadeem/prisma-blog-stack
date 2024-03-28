@@ -4,7 +4,10 @@
   "private": true,
   "description": "A two-package blog: an Express + Prisma API and a React reading client.",
   "license": "MIT",
-  "workspaces": ["server", "web"],
+  "workspaces": [
+    "server",
+    "web"
+  ],
   "scripts": {
     "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev -w @blogs/server\" \"npm run start -w @blogs/web\"",
     "build": "npm run build -w @blogs/server && npm run build -w @blogs/web",
@@ -16,7 +19,7 @@
     "test": "npm run test -w @blogs/server && npm run test -w @blogs/web"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^10.0.7"
   },
   "engines": {
     "node": ">=22.12"
