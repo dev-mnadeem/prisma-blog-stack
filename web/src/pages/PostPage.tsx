@@ -1,4 +1,17 @@
-import { Box, Button, Divider, Skeleton, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { type JSX, useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router';
 import { apiErrorMessage } from '../api/client';
@@ -18,6 +31,9 @@ export function PostPage(): JSX.Element {
 
   const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,14 +63,25 @@ export function PostPage(): JSX.Element {
     };
   }, [id]);
 
-  const onDelete = useCallback(async () => {
+  // A failed delete keeps the post on screen; replacing it with an error page lost the reader's place.
+  const onConfirmDelete = useCallback(async () => {
+    setIsDeleting(true);
+    setDeleteError(null);
     try {
       await deletePost(id);
-      navigate(routes.home);
-    } catch (deleteError) {
-      setError(apiErrorMessage(deleteError, 'Could not delete this post'));
+      navigate(routes.home, { replace: true });
+    } catch (failure) {
+      setDeleteError(apiErrorMessage(failure, 'Could not delete this post'));
+      setIsDeleting(false);
+      setIsConfirmingDelete(false);
     }
   }, [id, navigate]);
+
+  const closeDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setIsConfirmingDelete(false);
+    }
+  }, [isDeleting]);
 
   if (isLoading) {
     return (
@@ -99,7 +126,12 @@ export function PostPage(): JSX.Element {
         ))}
 
         <Divider sx={{ my: 4 }} />
-        <Stack direction="row" spacing={2}>
+        {deleteError ? (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {deleteError}
+          </Alert>
+        ) : null}
+        <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
           <Button component={RouterLink} to={routes.home} variant="text" color="inherit">
             ← All posts
           </Button>
@@ -108,13 +140,35 @@ export function PostPage(): JSX.Element {
               <Button component={RouterLink} to={routes.editPost(post.id)} variant="outlined">
                 Edit
               </Button>
-              <Button onClick={onDelete} variant="text" color="inherit">
+              <Button onClick={() => setIsConfirmingDelete(true)} variant="text" color="inherit">
                 Delete
               </Button>
             </>
           ) : null}
         </Stack>
       </Box>
+
+      <Dialog
+        open={isConfirmingDelete}
+        onClose={closeDeleteDialog}
+        aria-labelledby="delete-post-title"
+        aria-describedby="delete-post-body"
+      >
+        <DialogTitle id="delete-post-title">Delete this post?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-post-body">
+            “{post.title}” will be removed for every reader. This cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={closeDeleteDialog} color="inherit" disabled={isDeleting}>
+            Keep it
+          </Button>
+          <Button onClick={onConfirmDelete} variant="contained" disabled={isDeleting}>
+            {isDeleting ? 'Deleting…' : 'Delete post'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Layout>
   );
 }
