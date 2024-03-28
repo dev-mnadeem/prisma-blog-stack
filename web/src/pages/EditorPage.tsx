@@ -3,6 +3,7 @@ import { type JSX, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { apiErrorMessage } from '../api/client';
 import { createPost, fetchPost, updatePost } from '../api/posts';
+import { useAuth } from '../auth/AuthContext';
 import { Layout } from '../components/Layout';
 import { PostForm } from '../components/PostForm';
 import { routes } from '../components/routes';
@@ -14,6 +15,8 @@ import { PostDraft } from '../types/post';
 export function EditorPage({ mode }: { mode: 'create' | 'edit' }): JSX.Element {
   const { id = '' } = useParams();
   const navigate = useNavigate();
+  const { account } = useAuth();
+  const accountId = account?.id;
 
   const [draft, setDraft] = useState<PostDraft | undefined>(
     mode === 'create' ? { title: '', content: '' } : undefined
@@ -21,15 +24,21 @@ export function EditorPage({ mode }: { mode: 'create' | 'edit' }): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (mode !== 'edit') {
+    if (mode !== 'edit' || !accountId) {
       return;
     }
     let cancelled = false;
     fetchPost(id)
       .then((post) => {
-        if (!cancelled) {
-          setDraft({ title: post.title, content: post.content });
+        if (cancelled) {
+          return;
         }
+        // The API would refuse the save with a 403; say so before anyone types into the form.
+        if (post.author.id !== accountId) {
+          setError('You can only edit your own posts.');
+          return;
+        }
+        setDraft({ title: post.title, content: post.content });
       })
       .catch((fetchError) => {
         if (!cancelled) {
@@ -39,7 +48,7 @@ export function EditorPage({ mode }: { mode: 'create' | 'edit' }): JSX.Element {
     return () => {
       cancelled = true;
     };
-  }, [id, mode]);
+  }, [accountId, id, mode]);
 
   const onSubmit = useCallback(
     async (values: PostDraft) => {
