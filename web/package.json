@@ -36,25 +36,25 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.1.0",
-    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/user-event": "^14.6.8",
     "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.2.1",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
-    "jsdom": "^25.0.1",
+    "jsdom": "^31.0.0",
     "prettier": "^3.4.2",
-    "sass": "^1.83.0",
+    "sass": "^1.108.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.72.1",
-    "vite": "^5.4.11",
-    "vitest": "^2.1.8"
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
   }
 }
