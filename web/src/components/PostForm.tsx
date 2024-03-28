@@ -56,7 +56,7 @@ export function PostForm({ initialValues, submitLabel, onSubmit, onCancel }: Pos
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.title && Boolean(formik.errors.title)}
-          helperText={formik.touched.title ? formik.errors.title : ' '}
+          helperText={(formik.touched.title && formik.errors.title) || ' '}
         />
         <TextField
           fullWidth
@@ -69,7 +69,9 @@ export function PostForm({ initialValues, submitLabel, onSubmit, onCancel }: Pos
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.content && Boolean(formik.errors.content)}
-          helperText={formik.touched.content ? formik.errors.content : 'Blank lines start a new paragraph.'}
+          helperText={
+            (formik.touched.content && formik.errors.content) || 'Blank lines start a new paragraph.'
+          }
         />
         <Stack direction="row" spacing={2}>
           <Button type="submit" variant="contained" disabled={formik.isSubmitting}>

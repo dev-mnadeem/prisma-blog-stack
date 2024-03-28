@@ -54,4 +54,13 @@ describe('<PostForm />', () => {
 
     expect(await screen.findByText('Could not save the post')).toBeInTheDocument();
   });
+
+  it('keeps the paragraph hint once a valid body loses focus', async () => {
+    renderWithProviders(<PostForm submitLabel="Publish" onSubmit={vi.fn()} onCancel={vi.fn()} />);
+
+    await userEvent.type(screen.getByLabelText('Content'), 'A body long enough to pass.');
+    await userEvent.tab();
+
+    expect(screen.getByText('Blank lines start a new paragraph.')).toBeInTheDocument();
+  });
 });

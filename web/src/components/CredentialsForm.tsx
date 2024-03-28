@@ -50,6 +50,8 @@ export function CredentialsForm({
     },
   });
 
+  // Helper lines always render (a space when empty): if a valid field's helper vanished on blur,
+  // the button below would jump between mousedown and mouseup and the click would be lost.
   return (
     <Box component="form" onSubmit={formik.handleSubmit} noValidate>
       <Stack spacing={2}>
@@ -65,7 +67,7 @@ export function CredentialsForm({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name ? formik.errors.name : ' '}
+            helperText={(formik.touched.name && formik.errors.name) || ' '}
           />
         ) : null}
         <TextField
@@ -79,7 +81,7 @@ export function CredentialsForm({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email ? formik.errors.email : ' '}
+          helperText={(formik.touched.email && formik.errors.email) || ' '}
         />
         <TextField
           fullWidth
@@ -92,7 +94,7 @@ export function CredentialsForm({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password ? formik.errors.password : ' '}
+          helperText={(formik.touched.password && formik.errors.password) || ' '}
         />
         <Button type="submit" variant="contained" size="large" disabled={formik.isSubmitting}>
           {formik.isSubmitting ? 'Working…' : submitLabel}
