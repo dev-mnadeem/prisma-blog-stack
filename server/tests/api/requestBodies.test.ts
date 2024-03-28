@@ -17,4 +17,11 @@ describe('request bodies', () => {
     const response = await createPost(account.token, 'Too big', 'x'.repeat(300 * 1024)).expect(413);
     expect(response.body.message).to.equal('Request body is too large');
   });
+
+  it('answers a write with no body at all with 400 and the missing fields', async () => {
+    const account = await createAccount();
+    const response = await request(app).post('/api/posts').set('authtoken', account.token).expect(400);
+    expect(response.body.message).to.contain('Title is required');
+    expect(response.body.message).to.contain('Content is required');
+  });
 });

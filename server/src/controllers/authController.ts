@@ -8,13 +8,13 @@ import { credentialsSchema, registrationSchema } from '../validation/schemas';
 
 export const authController = {
   async signup(req: Request, res: Response): Promise<void> {
-    const input = await registrationSchema.validate(req.body, { abortEarly: false });
+    const input = await registrationSchema.validate(req.body ?? {}, { abortEarly: false });
     const user = await authService.register(input);
     sendData(res, user, STATUS.created);
   },
 
   async login(req: Request, res: Response): Promise<void> {
-    const input = await credentialsSchema.validate(req.body, { abortEarly: false });
+    const input = await credentialsSchema.validate(req.body ?? {}, { abortEarly: false });
     sendData(res, await authService.login(input));
   },
 

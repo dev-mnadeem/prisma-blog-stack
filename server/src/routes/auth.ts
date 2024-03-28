@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import { authController } from '../controllers/authController';
-import { asyncHandler } from '../http/asyncHandler';
 import { authenticate } from '../middleware/authenticate';
 
 export function authRoutes(): Router {
   const router = Router();
-  router.post('/signup', asyncHandler(authController.signup));
-  router.post('/login', asyncHandler(authController.login));
-  router.get('/me', authenticate, asyncHandler(authController.me));
+  router.post('/signup', authController.signup);
+  router.post('/login', authController.login);
+  router.get('/me', authenticate, authController.me);
   return router;
 }

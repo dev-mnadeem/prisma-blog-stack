@@ -8,8 +8,8 @@ import { AuthenticatedRequest } from '../types/request';
 import { listPostsSchema, writePostSchema } from '../validation/schemas';
 
 function postId(req: Request): string {
-  const id = req.params.id;
-  if (!id) {
+  const { id } = req.params;
+  if (typeof id !== 'string' || !id) {
     throw new BadRequestError('A post id is required');
   }
   return id;
@@ -36,12 +36,12 @@ export function createPostsController(posts: PostService) {
     },
 
     async create(req: AuthenticatedRequest, res: Response): Promise<void> {
-      const input = await writePostSchema.validate(req.body, { abortEarly: false });
+      const input = await writePostSchema.validate(req.body ?? {}, { abortEarly: false });
       sendData(res, await posts.create(requireUserId(req), input), STATUS.created);
     },
 
     async update(req: AuthenticatedRequest, res: Response): Promise<void> {
-      const input = await writePostSchema.validate(req.body, { abortEarly: false });
+      const input = await writePostSchema.validate(req.body ?? {}, { abortEarly: false });
       sendData(res, await posts.update(postId(req), requireUserId(req), input));
     },
 

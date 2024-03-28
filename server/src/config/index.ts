@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import { existsSync } from 'node:fs';
+
+const ENV_FILE = '.env';
+// Variables already set in the environment win over the file, as they did with dotenv.
+if (existsSync(ENV_FILE)) {
+  process.loadEnvFile(ENV_FILE);
+}
 
 /** Bcrypt work factor. 10 keeps a sign-up under ~100ms on a laptop. */
 const BCRYPT_ROUNDS = 10;

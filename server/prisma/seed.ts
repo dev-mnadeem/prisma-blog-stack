@@ -15,7 +15,7 @@ const SEED_PASSWORD = process.env.SEED_PASSWORD ?? 'blogs-demo-2024';
 
 async function main(): Promise<void> {
   const summaryProvider = createSummaryProvider(config);
-  const password = hashPassword(SEED_PASSWORD);
+  const password = await hashPassword(SEED_PASSWORD);
 
   const authorIds = new Map<string, string>();
   for (const author of SEED_AUTHORS) {

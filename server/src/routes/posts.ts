@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { PostsController } from '../controllers/postsController';
-import { asyncHandler } from '../http/asyncHandler';
 import { authenticate } from '../middleware/authenticate';
 
 /**
@@ -9,10 +8,10 @@ import { authenticate } from '../middleware/authenticate';
  */
 export function postRoutes(controller: PostsController): Router {
   const router = Router();
-  router.get('/', asyncHandler(controller.list));
-  router.get('/:id', asyncHandler(controller.get));
-  router.post('/', authenticate, asyncHandler(controller.create));
-  router.put('/:id', authenticate, asyncHandler(controller.update));
-  router.delete('/:id', authenticate, asyncHandler(controller.remove));
+  router.get('/', controller.list);
+  router.get('/:id', controller.get);
+  router.post('/', authenticate, controller.create);
+  router.put('/:id', authenticate, controller.update);
+  router.delete('/:id', authenticate, controller.remove);
   return router;
 }

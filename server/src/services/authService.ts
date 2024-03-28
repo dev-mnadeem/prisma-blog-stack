@@ -21,12 +21,13 @@ export interface Registration extends Credentials {
   name: string;
 }
 
-export function hashPassword(plain: string): string {
-  return bcrypt.hashSync(plain, config.bcryptRounds);
+/** Async so a sign-up or login does not stall every other request while bcrypt works. */
+export function hashPassword(plain: string): Promise<string> {
+  return bcrypt.hash(plain, config.bcryptRounds);
 }
 
-export function verifyPassword(plain: string, hash: string): boolean {
-  return bcrypt.compareSync(plain, hash);
+export function verifyPassword(plain: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(plain, hash);
 }
 
 export function signToken(userId: string): string {
@@ -55,7 +56,7 @@ export const authService = {
       throw new ConflictError('User already exists');
     }
     try {
-      const user = await userRepository.create({ name, email, password: hashPassword(password) });
+      const user = await userRepository.create({ name, email, password: await hashPassword(password) });
       return { id: user.id, name: user.name, email: user.email };
     } catch (error) {
       // Two sign-ups for one email can both pass the lookup above; the unique index decides.
@@ -72,7 +73,7 @@ export const authService = {
    */
   async login({ email, password }: Credentials): Promise<{ authtoken: string }> {
     const user = await userRepository.findByEmail(email);
-    if (!user || !verifyPassword(password, user.password)) {
+    if (!user || !(await verifyPassword(password, user.password))) {
       throw new UnauthorizedError('Invalid email/password');
     }
     return { authtoken: signToken(user.id) };
