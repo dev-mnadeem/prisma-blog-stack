@@ -44,7 +44,7 @@ class ConfigError extends Error {}
 function required(name: string): string {
   const value = process.env[name];
   if (!value) {
-    throw new ConfigError(`Missing required environment variable ${name}. Copy .env.sample to .env and fill it in.`);
+    throw new ConfigError(`Missing required environment variable ${name}. Copy .env.example to .env and fill it in.`);
   }
   return value;
 }
