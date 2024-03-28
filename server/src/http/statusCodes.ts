@@ -7,6 +7,7 @@ export const STATUS = {
   forbidden: 403,
   notFound: 404,
   conflict: 409,
+  payloadTooLarge: 413,
   serverError: 500,
 } as const;
 
