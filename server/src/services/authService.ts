@@ -6,6 +6,8 @@ import { ConflictError, UnauthorizedError } from '../http/errors';
 import { userRepository } from '../repositories/userRepository';
 import { AuthenticatedUser } from '../types/request';
 
+const TOKEN_ALGORITHM = 'HS256';
+
 interface TokenPayload {
   user: string;
 }
@@ -29,13 +31,14 @@ export function verifyPassword(plain: string, hash: string): boolean {
 
 export function signToken(userId: string): string {
   return jwt.sign({ user: userId } satisfies TokenPayload, config.jwtSecret, {
+    algorithm: TOKEN_ALGORITHM,
     expiresIn: config.jwtTtlSeconds,
   });
 }
 
 export function verifyToken(token: string): string {
   try {
-    const decoded = jwt.verify(token, config.jwtSecret) as TokenPayload;
+    const decoded = jwt.verify(token, config.jwtSecret, { algorithms: [TOKEN_ALGORITHM] }) as TokenPayload;
     if (!decoded?.user) {
       throw new UnauthorizedError();
     }

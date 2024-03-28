@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import { app, createAccount } from './helpers';
 
@@ -69,5 +70,14 @@ describe('authentication', () => {
   it('rejects a tampered token', async () => {
     const account = await createAccount();
     await request(app).get('/api/auth/me').set('authtoken', `${account.token}tampered`).expect(401);
+  });
+
+  it('rejects a token signed with an algorithm other than HS256', async () => {
+    const account = await createAccount();
+    const me = await request(app).get('/api/auth/me').set('authtoken', account.token).expect(200);
+    const secret = process.env.JWT_SECRET as string;
+    const otherAlgorithm = jwt.sign({ user: me.body.payload.id }, secret, { algorithm: 'HS512' });
+
+    await request(app).get('/api/auth/me').set('authtoken', otherAlgorithm).expect(401);
   });
 });
