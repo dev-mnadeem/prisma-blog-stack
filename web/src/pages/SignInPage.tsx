@@ -1,6 +1,6 @@
 import { Box, Link, Paper, Stack, Typography } from '@mui/material';
 import { type JSX, useCallback } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { CredentialsForm, CredentialsFormValues } from '../components/CredentialsForm';
 import { Layout } from '../components/Layout';
@@ -10,13 +10,16 @@ import { ink } from '../styles/theme';
 export function SignInPage(): JSX.Element {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  // RequireAuth sends readers here with the page they were trying to open.
+  const returnTo = (location.state as { from?: string } | null)?.from ?? routes.home;
 
   const onSubmit = useCallback(
     async (values: CredentialsFormValues) => {
       await signIn({ email: values.email, password: values.password });
-      navigate(routes.home);
+      navigate(returnTo, { replace: true });
     },
-    [navigate, signIn]
+    [navigate, returnTo, signIn]
   );
 
   return (
