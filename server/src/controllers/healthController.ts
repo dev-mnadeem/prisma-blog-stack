@@ -10,7 +10,7 @@ export function createHealthController(summaryProviderName: string) {
       try {
         await ping();
       } catch {
-        res.status(STATUS.serverError).json({
+        res.status(STATUS.serviceUnavailable).json({
           payload: { status: 'degraded', database: 'unreachable', summaryProvider: summaryProviderName },
         });
         return;

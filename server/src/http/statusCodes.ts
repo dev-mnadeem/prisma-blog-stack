@@ -9,6 +9,7 @@ export const STATUS = {
   conflict: 409,
   payloadTooLarge: 413,
   serverError: 500,
+  serviceUnavailable: 503,
 } as const;
 
 export type StatusCode = (typeof STATUS)[keyof typeof STATUS];
