@@ -6,11 +6,13 @@ import { useAuth } from '../auth/AuthContext';
 import { CredentialsForm, CredentialsFormValues } from '../components/CredentialsForm';
 import { Layout } from '../components/Layout';
 import { routes } from '../components/routes';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { ink } from '../styles/theme';
 
 export function SignUpPage(): JSX.Element {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  useDocumentTitle('Create an account');
 
   /** Registering then signing in saves the reader an immediate second form. */
   const onSubmit = useCallback(

@@ -8,6 +8,7 @@ import { PostCard } from '../components/PostCard';
 import { PostCardSkeleton } from '../components/PostCardSkeleton';
 import { routes } from '../components/routes';
 import { SearchField } from '../components/SearchField';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { ErrorState, StateMessage } from '../components/StateMessage';
 import { ink } from '../styles/theme';
 import { PostPage } from '../types/post';
@@ -94,6 +95,7 @@ export function PostsPage(): JSX.Element {
 
   const authorName = author ? result?.items[0]?.author.name : undefined;
   const heading = author ? `Posts by ${authorName ?? 'this author'}` : 'Latest posts';
+  useDocumentTitle(search ? `“${search}”` : author ? heading : undefined);
 
   return (
     <Layout maxWidth="md">

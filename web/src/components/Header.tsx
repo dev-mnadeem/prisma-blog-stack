@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { ink } from '../styles/theme';
 import { routes } from './routes';
@@ -7,7 +7,6 @@ import type { JSX } from 'react';
 
 export function Header(): JSX.Element {
   const { account, signOut } = useAuth();
-  const navigate = useNavigate();
 
   return (
     <AppBar
@@ -31,28 +30,37 @@ export function Header(): JSX.Element {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {account ? (
-            <>
-              <Typography variant="body2" sx={{ color: ink.secondary, display: { xs: 'none', sm: 'block' } }}>
-                {account.name}
-              </Typography>
-              <Button variant="contained" onClick={() => navigate(routes.newPost)}>
-                Write a post
-              </Button>
-              <Button variant="text" color="inherit" onClick={signOut}>
-                Sign out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button component={RouterLink} to={routes.signin} variant="text" color="inherit">
-                Sign in
-              </Button>
-              <Button component={RouterLink} to={routes.signup} variant="contained">
-                Create account
-              </Button>
-            </>
-          )}
+          <Box
+            component="nav"
+            aria-label="Account"
+            sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}
+          >
+            {account ? (
+              <>
+                <Typography
+                  variant="body2"
+                  sx={{ color: ink.secondary, display: { xs: 'none', sm: 'block' } }}
+                >
+                  {account.name}
+                </Typography>
+                <Button component={RouterLink} to={routes.newPost} variant="contained">
+                  Write a post
+                </Button>
+                <Button variant="text" color="inherit" onClick={signOut}>
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button component={RouterLink} to={routes.signin} variant="text" color="inherit">
+                  Sign in
+                </Button>
+                <Button component={RouterLink} to={routes.signup} variant="contained">
+                  Create account
+                </Button>
+              </>
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

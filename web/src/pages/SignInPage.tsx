@@ -5,11 +5,13 @@ import { useAuth } from '../auth/AuthContext';
 import { CredentialsForm, CredentialsFormValues } from '../components/CredentialsForm';
 import { Layout } from '../components/Layout';
 import { routes } from '../components/routes';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { ink } from '../styles/theme';
 
 export function SignInPage(): JSX.Element {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  useDocumentTitle('Sign in');
   const location = useLocation();
   // RequireAuth sends readers here with the page they were trying to open.
   const returnTo = (location.state as { from?: string } | null)?.from ?? routes.home;

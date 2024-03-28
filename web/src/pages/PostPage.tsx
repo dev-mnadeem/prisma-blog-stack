@@ -21,6 +21,7 @@ import { Byline } from '../components/Byline';
 import { Layout } from '../components/Layout';
 import { routes } from '../components/routes';
 import { ErrorState } from '../components/StateMessage';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { READING_MEASURE } from '../styles/theme';
 import { Post } from '../types/post';
 
@@ -34,6 +35,7 @@ export function PostPage(): JSX.Element {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  useDocumentTitle(post?.title);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

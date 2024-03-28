@@ -23,3 +23,29 @@ a {
   background: #8a3324;
   color: #fff;
 }
+
+// One visible focus ring everywhere, in the accent colour, for keyboard users only.
+:focus-visible {
+  outline: 2px solid #8a3324;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  z-index: 1300;
+  padding: 8px 14px;
+  border-radius: 4px;
+  background: #1b1b1f;
+  color: #fff;
+  font:
+    600 0.9375rem/1.4 'Source Sans 3',
+    system-ui,
+    sans-serif;
+  text-decoration: none;
+
+  &:focus {
+    top: 12px;
+  }
+}

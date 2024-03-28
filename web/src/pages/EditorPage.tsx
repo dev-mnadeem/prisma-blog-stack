@@ -8,6 +8,7 @@ import { Layout } from '../components/Layout';
 import { PostForm } from '../components/PostForm';
 import { routes } from '../components/routes';
 import { ErrorState } from '../components/StateMessage';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { ink } from '../styles/theme';
 import { PostDraft } from '../types/post';
 
@@ -17,6 +18,7 @@ export function EditorPage({ mode }: { mode: 'create' | 'edit' }): JSX.Element {
   const navigate = useNavigate();
   const { account } = useAuth();
   const accountId = account?.id;
+  useDocumentTitle(mode === 'create' ? 'Write a post' : 'Edit post');
 
   const [draft, setDraft] = useState<PostDraft | undefined>(
     mode === 'create' ? { title: '', content: '' } : undefined

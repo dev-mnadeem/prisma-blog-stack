@@ -74,7 +74,7 @@ describe('<PostsPage />', () => {
     renderWithProviders(<PostsPage />);
 
     await screen.findByText(samplePosts[0].title);
-    expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: 'pagination navigation' })).not.toBeInTheDocument();
   });
 
   it('shows pagination when there is more than one page', async () => {
@@ -82,7 +82,7 @@ describe('<PostsPage />', () => {
     renderWithProviders(<PostsPage />);
 
     await screen.findByText(samplePosts[0].title);
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'pagination navigation' })).toBeInTheDocument();
     expect(screen.getByText('14 posts')).toBeInTheDocument();
   });
 
