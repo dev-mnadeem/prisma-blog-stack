@@ -71,6 +71,20 @@ describe('posts', () => {
     expect(response.body.payload.items[0].title).to.contain(marker);
   });
 
+  it('treats % and _ in a search as literal characters', async () => {
+    const writer = await createAccount('Wildcard Author');
+    const me = await request(app).get('/api/auth/me').set('authtoken', writer.token).expect(200);
+    await createPost(writer.token, 'Plain title', BODY).expect(201);
+    await createPost(writer.token, 'Done 100%', BODY).expect(201);
+    const byWriter = `/api/posts?author=${me.body.payload.id}`;
+
+    const percent = await request(app).get(`${byWriter}&search=${encodeURIComponent('100%')}`).expect(200);
+    const underscore = await request(app).get(`${byWriter}&search=Plain_title`).expect(200);
+
+    expect(percent.body.payload.items.map((post: { title: string }) => post.title)).to.deep.equal(['Done 100%']);
+    expect(underscore.body.payload.total).to.equal(0);
+  });
+
   it('filters by author', async () => {
     const other = await createAccount('Other Author');
     await createPost(other.token, 'Only mine', BODY).expect(201);

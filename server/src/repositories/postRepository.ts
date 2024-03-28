@@ -18,15 +18,21 @@ export interface PostListQuery {
   take: number;
 }
 
+/** Prisma's `contains` drops the term into ILIKE as is, so % and _ would act as wildcards. */
+function escapeLikePattern(term: string): string {
+  return term.replace(/[\\%_]/g, '\\$&');
+}
+
 function buildWhere({ search, authorId }: PostListQuery): Prisma.PostWhereInput {
   const where: Prisma.PostWhereInput = {};
   if (authorId) {
     where.authorId = authorId;
   }
   if (search) {
+    const pattern = escapeLikePattern(search);
     where.OR = [
-      { title: { contains: search, mode: 'insensitive' } },
-      { content: { contains: search, mode: 'insensitive' } },
+      { title: { contains: pattern, mode: 'insensitive' } },
+      { content: { contains: pattern, mode: 'insensitive' } },
     ];
   }
   return where;
