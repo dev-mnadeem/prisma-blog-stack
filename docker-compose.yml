@@ -1,0 +1,81 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: blogs
+      POSTGRES_PASSWORD: blogs
+      POSTGRES_DB: blogs
+    ports:
+      - '7233:5432'
+    volumes:
+      - blogs-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U blogs -d blogs']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # One-shot. Uses the build stage because that is where the Prisma CLI lives.
+  migrate:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: build
+    working_dir: /repo/server
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: postgresql://blogs:blogs@db:5432/blogs
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: '7231'
+      DATABASE_URL: postgresql://blogs:blogs@db:5432/blogs
+      JWT_SECRET: ${JWT_SECRET:-change-me-before-you-deploy-anything}
+      JWT_TTL_SECONDS: '43200'
+      CORS_ORIGINS: http://localhost:7232
+      SUMMARY_PROVIDER: ${SUMMARY_PROVIDER:-local}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    ports:
+      - '7231:7231'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:7231/api
+    ports:
+      - '7232:8080'
+    depends_on:
+      - api
+
+  # Opt-in: docker compose --profile seed run --rm seed
+  seed:
+    profiles: ['seed']
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: build
+    working_dir: /repo/server
+    command: npx ts-node prisma/seed.ts
+    environment:
+      DATABASE_URL: postgresql://blogs:blogs@db:5432/blogs
+      JWT_SECRET: ${JWT_SECRET:-change-me-before-you-deploy-anything}
+      SUMMARY_PROVIDER: ${SUMMARY_PROVIDER:-local}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  blogs-db:
