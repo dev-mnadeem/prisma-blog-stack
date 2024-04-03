@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build: Vite bakes VITE_API_URL in, so it is a build argument ----
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 ARG VITE_API_URL=http://localhost:7231/api
 ENV VITE_API_URL=$VITE_API_URL
 WORKDIR /repo

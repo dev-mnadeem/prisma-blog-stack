@@ -1,0 +1,51 @@
+{
+  "mode": "Real disposable PostgreSQL, login tokens omitted; browser login, publication and logout verified",
+  "exchanges": [
+    {
+      "request": "POST /api/posts",
+      "status": 201,
+      "response": {
+        "payload": {
+          "id": "db37ab66-fca0-4519-86eb-9e78bf270b67",
+          "title": "A verified local publishing flow",
+          "content": "This synthetic post was persisted in a disposable PostgreSQL database during native verification.",
+          "excerpt": "This synthetic post was persisted in a disposable PostgreSQL database during native verification.",
+          "readingMinutes": 1,
+          "createdAt": "2026-10-28T15:52:31.640Z",
+          "updatedAt": "2026-10-28T15:52:31.640Z",
+          "author": {
+            "id": "37044484-9f45-460b-b15b-8ff9f3af607b",
+            "name": "Native Reviewer"
+          }
+        }
+      }
+    },
+    {
+      "request": "GET /api/posts?search=Published%20through%20the%20browser",
+      "status": 200,
+      "response": {
+        "payload": {
+          "items": [
+            {
+              "id": "f3faeb8f-acd3-4872-b775-96b4489ef886",
+              "title": "Published through the browser",
+              "content": "This synthetic browser example verifies the real client and API together, with PostgreSQL persistence.",
+              "excerpt": "This synthetic browser example verifies the real client and API together, with PostgreSQL persistence.",
+              "readingMinutes": 1,
+              "createdAt": "2026-10-28T15:52:32.916Z",
+              "updatedAt": "2026-10-28T15:52:32.916Z",
+              "author": {
+                "id": "37044484-9f45-460b-b15b-8ff9f3af607b",
+                "name": "Native Reviewer"
+              }
+            }
+          ],
+          "page": 1,
+          "pageSize": 10,
+          "total": 1,
+          "totalPages": 1
+        }
+      }
+    }
+  ]
+}

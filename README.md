@@ -17,7 +17,7 @@ A small blogging app split into two npm workspaces: an Express + Prisma API in `
 
 ## Getting started
 
-You need Node 20+ and a Postgres database.
+Validated with Node 22 and a Postgres database.
 
 ```bash
 npm install
@@ -72,3 +72,37 @@ The API tests use `TEST_DATABASE_URL` (or `DATABASE_URL` if that isn't set) and 
 - Search uses `ILIKE`, which is fine for a small dataset but would need a trigram index later.
 - Tokens last 12 hours and there are no refresh tokens.
 - No comments, tags or drafts yet.
+
+## Post ownership and excerpts
+
+```mermaid
+flowchart LR
+    Read[Public reader] --> List[Paginated posts and search]
+    Writer[Signed-in writer] --> Auth[JWT verification]
+    Auth --> Owner[Author ownership check]
+    Owner --> Save[Create or edit post]
+    Save --> Summary[Local excerpt and reading-time calculation]
+    Summary --> DB[(PostgreSQL)]
+    DB --> List
+```
+
+## Native verification
+
+![Real desktop publishing flow](docs/screenshots/native-desktop.png)
+
+[Mobile capture](docs/screenshots/native-mobile.png) and
+[HTTP responses](docs/native-api.json). The built web client was checked against
+the real API and a disposable PostgreSQL database: login, publish, read the
+stored post, and logout. Excerpts use the local provider; no hosted model was
+called. `npm start -w @blogs/server` and the container entrypoint now use the
+actual compiler output, `dist/src/server.js`.
+
+The full local suite passes: 11 unit, 20 database API, and 21 UI tests. CI runs
+that suite and both builds with PostgreSQL 16 and Node 22. Container execution
+remains unverified here. The latest production dependency audit still reports
+two moderate advisories in React Router 6; moving to Router 7 is a separate
+compatibility change. No clean-audit claim is made for this stack.
+
+## Author
+
+[**Muhammad Nadeem**](https://github.com/dev-mnadeem)

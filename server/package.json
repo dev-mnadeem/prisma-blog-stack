@@ -4,10 +4,10 @@
   "private": true,
   "description": "Express + Prisma API behind the blog: accounts, posts, excerpts and search.",
   "license": "MIT",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "dev": "nodemon --watch src --ext ts --exec \"ts-node src/server.ts\"",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
